@@ -1,136 +1,135 @@
-<style>
-        .card {
-            border-radius: 10px;
-        }
-        .huge {
-            background-color: #ffcccb; /* Rosso chiaro per mostri grandi */
-        }
-        .beast {
-            background-color: #c6e2ff; /* Blu chiaro per bestie */
-        }
-        .text-highlight {
-            font-weight: bold;
-        }
-        /* Stili generali per il blocco statistiche */
-        .card-body {
-        font-family: 'Georgia', serif; /* Ispirato al font classico, puoi sostituirlo */
-        border: 2px solid #000;
-        padding: 15px;
-        margin-bottom: 20px; /* Spazio sotto il blocco */
-        background-color: #fff; /* Sfondo bianco */
-        color: #000; /* Testo nero */
-        line-height: 1.4; /* Interlinea per la leggibilità */
-        }
+.card {
+    border-radius: 10px;
+}
+.huge {
+    background-color: #ffcccb; /* Rosso chiaro per mostri grandi */
+}
+.beast {
+    background-color: #c6e2ff; /* Blu chiaro per bestie */
+}
+.text-highlight {
+    font-weight: bold;
+}
+/* Stili generali per il blocco statistiche */
+.card-body {
+font-family: 'Georgia', serif; /* Ispirato al font classico, puoi sostituirlo */
+border: 2px solid #000;
+padding: 15px;
+margin-bottom: 20px; /* Spazio sotto il blocco */
+background-color: #fff; /* Sfondo bianco */
+color: #000; /* Testo nero */
+line-height: 1.4; /* Interlinea per la leggibilità */
+}
 
-        /* Titolo creatura (Elefante) */
-        .card-title {
-        font-size: 2em;
-        margin-top: 0;
-        margin-bottom: 0.2em;
-        font-weight: bold; /* Potrebbe essere già bold di default, ma lo specifichiamo */
-        }
+/* Titolo creatura (Elefante) */
+.card-title {
+font-size: 2em;
+margin-top: 0;
+margin-bottom: 0.2em;
+font-weight: bold; /* Potrebbe essere già bold di default, ma lo specifichiamo */
+}
 
-        /* Sottotitolo creatura (Huge beast...) */
-        .creature-subtitle {
-        font-size: 1em;
-        font-style: italic; /* Testo in corsivo come nell'immagine */
-        margin-top: 0.2em;
-        margin-bottom: 1em;
-        }
+/* Sottotitolo creatura (Huge beast...) */
+.creature-subtitle {
+font-size: 1em;
+font-style: italic; /* Testo in corsivo come nell'immagine */
+margin-top: 0.2em;
+margin-bottom: 1em;
+}
 
-        /* Container per statistiche base (Armor Class, Hit Points, Speed) */
-        .stats-container {
-        margin-bottom: 1em;
-        }
+/* Container per statistiche base (Armor Class, Hit Points, Speed) */
+.stats-container {
+margin-bottom: 1em;
+}
 
-        /* Linea singola di statistica (Armor Class 12...) */
-        .stat-line {
-        display: flex; /* Usa flexbox per allineare label e valore */
-        margin-bottom: 0.3em;
-        }
+/* Linea singola di statistica (Armor Class 12...) */
+.stat-line {
+display: flex; /* Usa flexbox per allineare label e valore */
+margin-bottom: 0.3em;
+}
 
-        .stat-line dt {
-        font-weight: bold;
-        margin-right: 0.5em; /* Spazio tra label e valore */
-        }
+.stat-line dt {
+font-weight: bold;
+margin-right: 0.5em; /* Spazio tra label e valore */
+}
 
-        .stat-line dd {
-        margin: 0; /* Rimuove il margin predefinito di dd */
-        }
+.stat-line dd {
+margin: 0; /* Rimuove il margin predefinito di dd */
+}
 
-        /* Sezione Ability Scores (STR DEX CON...) */
-        .ability-scores {
-        margin-bottom: 1.5em;
-        border-bottom: 1px solid #ccc; /* Linea divisoria sotto Ability Scores */
-        padding-bottom: 0.5em;
-        }
+/* Sezione Ability Scores (STR DEX CON...) */
+.ability-scores {
+margin-bottom: 1.5em;
+border-bottom: 1px solid #ccc; /* Linea divisoria sotto Ability Scores */
+padding-bottom: 0.5em;
+}
 
-        /* Header delle Ability Scores (STR DEX CON...) */
-        .ability-header {
-        display: flex;
-        justify-content: space-between; /* Spazia le abbreviazioni */
-        font-weight: bold;
-        text-align: center; /* Centra il testo delle intestazioni */
-        margin-bottom: 0.2em;
-        }
+/* Header delle Ability Scores (STR DEX CON...) */
+.ability-header {
+display: flex;
+justify-content: space-between; /* Spazia le abbreviazioni */
+font-weight: bold;
+text-align: center; /* Centra il testo delle intestazioni */
+margin-bottom: 0.2em;
+}
 
-        .ability-header span {
-        flex-grow: 1; /* Distribuisce lo spazio equamente tra le intestazioni */
-        flex-basis: 0; /* Evita che il contenuto interno influenzi la larghezza iniziale */
-        }
+.ability-header span {
+flex-grow: 1; /* Distribuisce lo spazio equamente tra le intestazioni */
+flex-basis: 0; /* Evita che il contenuto interno influenzi la larghezza iniziale */
+}
 
-        /* Valori delle Ability Scores (22 (+6) ...) */
-        .ability-values {
-        display: flex;
-        justify-content: space-between; /* Spazia i valori */
-        text-align: center; /* Centra i valori */
-        }
+/* Valori delle Ability Scores (22 (+6) ...) */
+.ability-values {
+display: flex;
+justify-content: space-between; /* Spazia i valori */
+text-align: center; /* Centra i valori */
+}
 
-        .ability-values span {
-        flex-grow: 1; /* Distribuisce lo spazio equamente tra i valori */
-        flex-basis: 0; /* Evita che il contenuto interno influenzi la larghezza iniziale */
-        }
+.ability-values span {
+flex-grow: 1; /* Distribuisce lo spazio equamente tra i valori */
+flex-basis: 0; /* Evita che il contenuto interno influenzi la larghezza iniziale */
+}
 
 
-        /* Sezioni Traits e Actions */
-        .traits-section,
-        .actions-section {
-        margin-bottom: 1.5em;
-        }
+/* Sezioni Traits e Actions */
+.traits-section,
+.actions-section {
+margin-bottom: 1.5em;
+}
 
-        /* Titoli di sezione (Traits, Actions) */
-        .traits-section h3,
-        .actions-section h3 {
-        font-size: 1.4em;
-        margin-top: 0;
-        margin-bottom: 0.5em;
-        font-weight: bold;
-        border-bottom: 1px solid #ccc; /* Linea divisoria sotto i titoli di sezione */
-        padding-bottom: 0.2em;
-        }
+/* Titoli di sezione (Traits, Actions) */
+.traits-section h3,
+.actions-section h3 {
+font-size: 1.4em;
+margin-top: 0;
+margin-bottom: 0.5em;
+font-weight: bold;
+border-bottom: 1px solid #ccc; /* Linea divisoria sotto i titoli di sezione */
+padding-bottom: 0.2em;
+}
 
-        /* Singolo Trait o Action */
-        .trait,
-        .action {
-        margin-bottom: 1em;
-        }
+/* Singolo Trait o Action */
+.trait,
+.action {
+margin-bottom: 1em;
+}
 
-        /* Titolo del Trait o Action (Carica travolgente, Incornata...) */
-        .trait h4,
-        .action h4 {
-        font-weight: bold;
-        margin-top: 0;
-        margin-bottom: 0.3em;
-        }
+/* Titolo del Trait o Action (Carica travolgente, Incornata...) */
+.trait h4,
+.action h4 {
+font-weight: bold;
+margin-top: 0;
+margin-bottom: 0.3em;
+}
 
-        /* Paragrafo di descrizione per Traits e Actions */
-        .trait p,
-        .action p {
-        margin-top: 0;
-        margin-bottom: 0;
-        }
+/* Paragrafo di descrizione per Traits e Actions */
+.trait p,
+.action p {
+margin-top: 0;
+margin-bottom: 0;
+}
 
-        .col-3 {
-            width: 30%;
-        }
-    </style>
+.col-3 {
+    width: 30%;
+}
+
