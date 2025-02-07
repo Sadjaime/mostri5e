@@ -184,7 +184,7 @@
             function fetchMonsters() {
                 const query = searchInput.value;
                 const selectedCR = crFilter.value; // Ottiene il valore selezionato
-                fetch(`http://127.0.0.1:5000/api/monsters?search=${query}`)
+                fetch(`https://mostri5e-production.up.railway.app/api/monsters?search=${query}`)
                     .then(response => response.json())
                     .then(data => {
                         monsterContainer.innerHTML = "";
