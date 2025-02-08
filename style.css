@@ -133,3 +133,38 @@ margin-bottom: 0;
     width: 30%;
 }
 
+/* Autocomplete dropdown positioning */
+.awesomplete {
+    position: relative; /* Makes the dropdown relative to the input container */
+    display: block;
+    width: 100%;
+  }
+  
+  .awesomplete > ul {
+    position: absolute;
+    left: 0;
+    top: 100%; /* Positions the dropdown right below the input */
+    width: 100%;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 1000; /* Ensures dropdown appears above other elements */
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Match Bootstrap's input styling */
+  .awesomplete > ul > li {
+    padding: 0.375rem 0.75rem;
+    cursor: pointer;
+    background: white;
+  }
+  
+  .awesomplete > ul > li[aria-selected="true"] {
+    background-color: #f8f9fa;
+  }
+  
+  .awesomplete > ul > li:hover {
+    background-color: #e9ecef;
+  }

@@ -7,48 +7,52 @@ app = Flask(__name__)
 CORS(app)  # 🔥 Abilita CORS per tutte le richieste
 Compress(app)
 def fetch_monster_data_from_db():
-    conn = sqlite3.connect('./database/monsters.db')
-    conn.row_factory = sqlite3.Row  # Facilita l'accesso ai risultati come dizionari
-    cursor = conn.cursor()
+    try:
+        conn = sqlite3.connect('./database/monsters.db')
+        conn.row_factory = sqlite3.Row  # Facilita l'accesso ai risultati come dizionari
+        cursor = conn.cursor()
 
-    cursor.execute("SELECT id, name, type, challenge_rating, armor_class, armor_class_notes, hit_points, hit_points_notes, speed, source FROM monsters")
-    monster_base_data = [dict(row) for row in cursor.fetchall()] # Converti Row objects in dicts
+        cursor.execute("SELECT id, name, type, challenge_rating, armor_class, armor_class_notes, hit_points, hit_points_notes, speed, source FROM monsters")
+        monster_base_data = [dict(row) for row in cursor.fetchall()] # Converti Row objects in dicts
 
-    all_monsters_data = []
-    for monster in monster_base_data:
-        monster_id = monster["id"]
+        all_monsters_data = []
+        for monster in monster_base_data:
+            monster_id = monster["id"]
 
-        # Recupera Traits
-        cursor.execute("SELECT name, content FROM traits WHERE monster_id = ?", (monster_id,))
-        traits_data = [dict(row) for row in cursor.fetchall()]
+            # Recupera Traits
+            cursor.execute("SELECT name, content FROM traits WHERE monster_id = ?", (monster_id,))
+            traits_data = [dict(row) for row in cursor.fetchall()]
 
-        # Recupera Actions
-        cursor.execute("SELECT name, content FROM actions WHERE monster_id = ?", (monster_id,))
-        actions_data = [dict(row) for row in cursor.fetchall()]
+            # Recupera Actions
+            cursor.execute("SELECT name, content FROM actions WHERE monster_id = ?", (monster_id,))
+            actions_data = [dict(row) for row in cursor.fetchall()]
 
-        # Recupera Abilities
-        cursor.execute("SELECT strength, dexterity, constitution, intelligence, wisdom, charisma FROM abilities WHERE monster_id = ?", (monster_id,))
-        abilities_row = cursor.fetchone() # Expecting only one row per monster for abilities
-        abilities_data = {} # Initialize as dictionary
-        if abilities_row: # Check if abilities data exists for the monster
-            abilities_data = {
-                "STR": abilities_row[0],
-                "DEX": abilities_row[1],
-                "CON": abilities_row[2],
-                "INT": abilities_row[3],
-                "WIS": abilities_row[4],
-                "CHA": abilities_row[5],
-            }
+            # Recupera Abilities
+            cursor.execute("SELECT strength, dexterity, constitution, intelligence, wisdom, charisma FROM abilities WHERE monster_id = ?", (monster_id,))
+            abilities_row = cursor.fetchone() # Expecting only one row per monster for abilities
+            abilities_data = {} # Initialize as dictionary
+            if abilities_row: # Check if abilities data exists for the monster
+                abilities_data = {
+                    "STR": abilities_row[0],
+                    "DEX": abilities_row[1],
+                    "CON": abilities_row[2],
+                    "INT": abilities_row[3],
+                    "WIS": abilities_row[4],
+                    "CHA": abilities_row[5],
+                }
 
-        # Assembla tutti i dati del mostro
-        full_monster_data = monster.copy() # Copia i dati base
-        full_monster_data["type"] = monster["type"]
-        full_monster_data["traits"] = traits_data if traits_data else []  # Assicurati che sia una lista vuota se non ci sono tratti
-        full_monster_data["actions"] = actions_data if actions_data else []  # Assicurati che sia una lista vuota se non ci sono azioni
-        full_monster_data["abilities"] = abilities_data  # Può essere una lista vuota o un dizionario vuoto
-        all_monsters_data.append(full_monster_data)
+            # Assembla tutti i dati del mostro
+            full_monster_data = monster.copy() # Copia i dati base
+            full_monster_data["type"] = monster["type"]
+            full_monster_data["traits"] = traits_data if traits_data else []  # Assicurati che sia una lista vuota se non ci sono tratti
+            full_monster_data["actions"] = actions_data if actions_data else []  # Assicurati che sia una lista vuota se non ci sono azioni
+            full_monster_data["abilities"] = abilities_data  # Può essere una lista vuota o un dizionario vuoto
+            all_monsters_data.append(full_monster_data)
 
-    conn.close()
+    except sqlite3.Error as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
     return all_monsters_data
 
 @app.route('/api/monsters', methods=['GET'])
