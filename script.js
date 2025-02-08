@@ -1,58 +1,97 @@
-document.addEventListener("DOMContentLoaded", function () {
+import { API_BASE_URL } from './config.js';
+document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById("searchInput");
     const crFilter = document.getElementById("crFilter");
     const monsterContainer = document.getElementById("monsterContainer");
-    let allMonsters = []; // Store all monsters for autocomplete
+    const autocompleteList = document.createElement("ul");
+    autocompleteList.id = "autocompleteList";
+    searchInput.parentNode.appendChild(autocompleteList);
 
-    // Fetch all monsters on page load for autocomplete
-    fetch(`http://127.0.0.1:8080/api/monsters`)
-        .then(response => response.json())
-        .then(data => {
-            allMonsters = data; // Store all monsters
-            initializeAutocomplete(); // Initialize autocomplete
-        })
-        .catch(error => {
-            console.error("Error fetching monsters:", error);
-        });
+    // Autocomplete styling (add to your CSS)
+    autocompleteList.style.position = "absolute";
+    autocompleteList.style.zIndex = "1000";
+    autocompleteList.style.backgroundColor = "white";
+    autocompleteList.style.width = "100%";
+    autocompleteList.style.border = "1px solid #ced4da";
+    autocompleteList.style.borderRadius = "0.375rem";
+    autocompleteList.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.15)";
+    autocompleteList.style.display = "none";
 
-    // Initialize autocomplete
-    function initializeAutocomplete() {
-        new Awesomplete(searchInput, {
-            list: allMonsters.map(monster => monster.name), // Use monster names for autocomplete
-            minChars: 1, // Show suggestions after 1 character is typed
-            autoFirst: true, // Automatically select the first suggestion
-            filter: function (text, input) {
-                return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
-            },
-            item: function (text, input) {
-                return Awesomplete.ITEM(text, input.match(/[^,]*$/)[0]);
-            },
-            replace: function (text) {
-                this.input.value = text; // Replace input with selected suggestion
-                fetchMonsters(); // Fetch monsters when a suggestion is selected
-            }
-        });
+    let timeoutId;
+    
+    function fetchAutocomplete(query) {
+        if (!query) {
+            autocompleteList.style.display = "none";
+            return;
+        }
+        
+        fetch(`http://${API_BASE_URL}:8080/api/autocomplete?query=${encodeURIComponent(query)}`)
+            .then((response) => response.json())
+            .then((suggestions) => {
+                autocompleteList.innerHTML = "";
+                if (suggestions.length > 0) {
+                    autocompleteList.style.display = "block";
+                    suggestions.forEach((suggestion) => {
+                        const li = document.createElement("li");
+                        li.textContent = suggestion;
+                        li.style.padding = "8px";
+                        li.style.cursor = "pointer";
+                        // Inside fetchAutocomplete()
+                        li.addEventListener("click", () => {
+                            searchInput.value = suggestion;
+                            autocompleteList.style.display = "none";
+                            
+                            // 🔥 Reset the GS filter to "Tutti" (all)
+                            crFilter.value = "";
+                            
+                            // Fetch monsters (now with the filter reset)
+                            fetchMonsters();
+                        });
+                        autocompleteList.appendChild(li);
+                    });
+                } else {
+                    autocompleteList.style.display = "none";
+                }
+            });
     }
 
-    // Fetch monsters based on search and filters
     function fetchMonsters() {
-        const query = searchInput.value.trim(); // Define query here
-        const selectedCR = crFilter.value;
-
-        // Fetch monsters from the API
-        fetch(`http://127.0.0.1:8080/api/monsters?search=${query}`)
+        const query = searchInput.value.trim();
+        const selectedCR = crFilter.value; // Will be "" after autocomplete selection
+        
+        fetch(`http://${API_BASE_URL}:8080/api/monsters?search=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
-                // Filter monsters based on Challenge Rating
+                // Filter monsters (now with reset GS)
                 const filteredMonsters = data.filter(monster => 
                     selectedCR === "" || monster.challenge_rating == selectedCR
                 );
-                renderMonsters(filteredMonsters); // Render the filtered monsters
-            })
-            .catch(error => {
-                console.error("Error fetching monsters:", error);
+                renderMonsters(filteredMonsters);
             });
     }
+
+    // Event Listeners
+    searchInput.addEventListener("input", (e) => {
+        clearTimeout(timeoutId);
+        const query = e.target.value.trim();
+        timeoutId = setTimeout(() => fetchAutocomplete(query), 300);
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            autocompleteList.style.display = "none";
+            fetchMonsters();
+        }
+    });
+
+    crFilter.addEventListener("change", fetchMonsters);
+
+    // Close autocomplete when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!searchInput.contains(e.target) && !autocompleteList.contains(e.target)) {
+            autocompleteList.style.display = "none";
+        }
+    });
 
     // Render monsters to the page
     function renderMonsters(monsters) {
@@ -103,18 +142,4 @@ document.addEventListener("DOMContentLoaded", function () {
             monsterContainer.innerHTML += monsterCard;
         });
     }
-
-    // Event listeners
-    searchInput.addEventListener("input", () => {
-        // Only show autocomplete suggestions, don't fetch monsters yet
-        Awesomplete.$input.dispatchEvent(new Event("input"));
-    });
-
-    searchInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            fetchMonsters(); // Fetch monsters when Enter is pressed
-        }
-    });
-
-    crFilter.addEventListener("change", fetchMonsters); // Fetch monsters when filter is applied
 });
