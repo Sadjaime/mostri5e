@@ -22,14 +22,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div class="card mb-3 ${monsterClass}">
                             <div class="card-body">
                                 <h5 class="card-title">${monster.name}</h5>
-                                <p class="card-text creature-subtitle"><span class="text-highlight">Tipo:</span> ${monster.type}</p>
-                                <p class="card-text"><span class="text-highlight">GS:</span> ${monster.challenge_rating}</p>
+                                <p class="card-text creature-subtitle"><span class="text-highlight">Tipo</span> ${monster.type}</p>
+                                <p class="card-text"><span class="text-highlight">GS</span> ${monster.challenge_rating}</p>
                                 <div class="stats-container">                
-                                    <div class="stat-line"><dt>Armor Class:<dt>Classe Armatura</dt><dd> ${monster.armor_class}</dd>
+                                    <div class="stat-line"><dt>Classe Armatura</dt><dd> ${monster.armor_class}</dd>
                                         </div>
-                                    <div class="stat-line"><dt>Punti Ferita:</dt> <dd>${monster.hit_points}</dd>
+                                    <div class="stat-line"><dt>Punti Ferita</dt> <dd>${monster.hit_points}</dd>
                                         </div>
-                                    <div class="stat-line"><dt>Velocità:</dt> <dd>${monster.speed}</dd>
+                                    <div class="stat-line"><dt>Velocità</dt> <dd>${monster.speed}</dd>
                                 </div>
                                 <div class="ability-scores">
                                     <div class="ability-header">
@@ -51,11 +51,11 @@ document.addEventListener("DOMContentLoaded", function() {
                                 </div>
                                 <div class="traits-section">
                                     <h3>Tratti</h3> 
-                                    <div class="trait">${monster.traits.map(trait => `<strong>${trait.name}:</strong> ${trait.content}`).join("<br>")}</div>
+                                    <div class="trait">${monster.traits.map(trait => `<strong>${trait.name}.</strong> ${trait.content}`).join("<br>")}</div>
                                 </div>
                                 <div class="actions-section">
                                     <h3>Azioni</h3> 
-                                    <div class="action">${monster.actions.map(action => `<strong>${action.name}:</strong> ${action.content}`).join("<br>")}</div>
+                                    <div class="action">${monster.actions.map(action => `<strong>${action.name}.</strong> ${action.content}`).join("<br>")}</div>
                                     
                                 </div>
                             </div>
