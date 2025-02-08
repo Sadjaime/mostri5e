@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
         
-        fetch(`http://${API_BASE_URL}:8080/api/autocomplete?query=${encodeURIComponent(query)}`)
+        fetch(`${API_BASE_URL}/autocomplete?query=${encodeURIComponent(query)}`)
             .then((response) => response.json())
             .then((suggestions) => {
                 autocompleteList.innerHTML = "";
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const query = searchInput.value.trim();
         const selectedCR = crFilter.value; // Will be "" after autocomplete selection
         
-        fetch(`http://${API_BASE_URL}:8080/api/monsters?search=${encodeURIComponent(query)}`)
+        fetch(`${API_BASE_URL}/monsters?search=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
                 // Filter monsters (now with reset GS)
