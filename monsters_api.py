@@ -60,6 +60,22 @@ def get_monsters():
         if search_query in monster["name"].lower()
     ]
     return jsonify(filtered_monsters)
+@app.route('/api/autocomplete', methods=['GET'])
+def autocomplete():
+    search_query = request.args.get('query', '').lower()
+    limit = int(request.args.get('limit', 10))  # Limita il numero di risultati
+
+    conn = sqlite3.connect('./database/monsters.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT name FROM monsters WHERE name LIKE ? LIMIT ?", (f"%{search_query}%", limit)
+    )
+    results = [row['name'] for row in cursor.fetchall()]
+    conn.close()
+    
+    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=8080)
