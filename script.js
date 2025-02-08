@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function fetchMonsters(reset = false) {
         const query = searchInput.value.trim();
         const selectedCR = crFilter.value; // Ottiene il valore selezionato
-        const url = `{ API_BASE_URL }/monsters?search=${query}&limit=${limit}&offset=${currentOffset}`;
+        const url = `https://mostri5e-production.up.railway.app:8080/api/monsters?search=${query}&limit=${limit}&offset=${currentOffset}`;
 
         fetch(url)
             .then((response) => response.json())
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Funzione per mostrare l'autocomplete
     function fetchAutocomplete(query) {
-        fetch(`{ API_BASE_URL }/autocomplete?query=${encodeURIComponent(query)}`)
+        fetch(`https://mostri5e-production.up.railway.app:8080/api/autocomplete?query=${encodeURIComponent(query)}`)
             .then((response) => response.json())
             .then((suggestions) => {
                 autocompleteList.innerHTML = ""; // Resetta la lista
