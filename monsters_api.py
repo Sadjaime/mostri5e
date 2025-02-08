@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3
+from flask_compress import Compress
 
 app = Flask(__name__)
 CORS(app)  # 🔥 Abilita CORS per tutte le richieste
-
+Compress(app)
 def fetch_monster_data_from_db():
     conn = sqlite3.connect('./database/monsters.db')
     conn.row_factory = sqlite3.Row  # Facilita l'accesso ai risultati come dizionari
