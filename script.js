@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     autocompleteList.style.position = "absolute";
     autocompleteList.style.zIndex = "1000";
     autocompleteList.style.backgroundColor = "white";
-    autocompleteList.style.width = "100%";
+    autocompleteList.style.width = `${searchInput.offsetWidth}px`;
     autocompleteList.style.border = "1px solid #ced4da";
     autocompleteList.style.borderRadius = "0.375rem";
     autocompleteList.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.15)";
