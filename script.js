@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     autocompleteList.style.borderRadius = "0.375rem";
     autocompleteList.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.15)";
     autocompleteList.style.display = "none";
+    autocompleteList.style.paddingLeft = "5px";
 
     let timeoutId;
     
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         const li = document.createElement("li");
                         li.textContent = suggestion;
                         li.style.padding = "8px";
-                        li.style.cursor = "pointer";
+                        li.style.cursor = "none";
                         // Inside fetchAutocomplete()
                         li.addEventListener("click", () => {
                             searchInput.value = suggestion;
