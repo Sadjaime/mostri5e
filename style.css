@@ -132,9 +132,4 @@ margin-bottom: 0;
 .col-3 {
     width: 30%;
 }
-/* Lista Autocomplete */
-ul#autocompleteList {
-    list-style-type: none;
-    margin-left: 0px;
-    padding-left: 5px;
-}
+
