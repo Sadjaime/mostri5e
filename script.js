@@ -131,11 +131,11 @@ document.addEventListener("DOMContentLoaded", function() {
                             </div>
                             <div class="traits-section">
                                 <h3>Tratti</h3> 
-                                <div class="trait">${monster.traits.map(trait => `<strong>${trait.name}:</strong> ${trait.content}`).join("<br>")}</div>
+                                <div class="trait">${monster.traits.map(trait => `<strong>${trait.name}</strong> ${trait.content}`).join("<br>")}</div>
                             </div>
                             <div class="actions-section">
                                 <h3>Azioni</h3> 
-                                <div class="action">${monster.actions.map(action => `<strong>${action.name}:</strong> ${action.content}`).join("<br>")}</div>
+                                <div class="action">${monster.actions.map(action => `<strong>${action.name}</strong> ${action.content}`).join("<br>")}</div>
                             </div>
                         </div>
                     </div>
