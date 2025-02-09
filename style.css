@@ -133,3 +133,6 @@ margin-bottom: 0;
     width: 30%;
 }
 
+ul {
+    list-style-type: none !important;
+}
