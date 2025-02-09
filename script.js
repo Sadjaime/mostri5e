@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <p class="card-text creature-subtitle"><span class="text-highlight">Tipo</span> ${monster.type}</p>
                             <p class="card-text"><span class="text-highlight">GS</span> ${monster.challenge_rating}</p>
                             <div class="stats-container">                
-                                <div class="stat-line"><<dt>Classe Armatura</dt><dd> ${monster.armor_class}</dd></div>
+                                <div class="stat-line"><dt>Classe Armatura</dt><dd> ${monster.armor_class}</dd></div>
                                 <div class="stat-line"><dt>Punti Ferita</dt> <dd>${monster.hit_points}</dd></div>
                                 <div class="stat-line"><dt>Velocità</dt> <dd>${monster.speed}</dd></div>
                             </div>
