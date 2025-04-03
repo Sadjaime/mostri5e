@@ -12,11 +12,11 @@
 }
 /* Stili generali per il blocco statistiche */
 .card-body {
-font-family: 'Georgia', serif; /* Ispirato al font classico, puoi sostituirlo */
+font-family: 'Calibri', serif; /* Ispirato al font classico, puoi sostituirlo */
 border: 2px solid #000;
 padding: 15px;
 margin-bottom: 20px; /* Spazio sotto il blocco */
-background-color: #fff; /* Sfondo bianco */
+background-color: #fdf1dc; /* Sfondo giallognolo */
 color: #000; /* Testo nero */
 line-height: 1.4; /* Interlinea per la leggibilità */
 }
@@ -60,7 +60,7 @@ margin: 0; /* Rimuove il margin predefinito di dd */
 /* Sezione Ability Scores (STR DEX CON...) */
 .ability-scores {
 margin-bottom: 1.5em;
-border-bottom: 1px solid #ccc; /* Linea divisoria sotto Ability Scores */
+border-bottom: 1px solid #742; /* Linea divisoria sotto Ability Scores */
 padding-bottom: 0.5em;
 }
 
@@ -104,7 +104,7 @@ font-size: 1.4em;
 margin-top: 0;
 margin-bottom: 0.5em;
 font-weight: bold;
-border-bottom: 1px solid #ccc; /* Linea divisoria sotto i titoli di sezione */
+border-bottom: 1px solid #742; /* Linea divisoria sotto i titoli di sezione */
 padding-bottom: 0.2em;
 }
 
