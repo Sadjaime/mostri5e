@@ -142,7 +142,7 @@ li {
     pointer-events: auto;
 }
 li:hover{
-   background-color: rgba(128, 0, 128,.2); 
+   background-color: rgba(128, 0, 128,.1); 
 }
 
 /* Paragrafo con specificata la source material */
