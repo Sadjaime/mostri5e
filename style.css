@@ -144,3 +144,13 @@ li {
 li::hover{
    background-color: rgba(128, 0, 128,.2); 
 }
+
+/* Paragrafo con specificata la source material */
+.source-material {
+    position: absolute;
+    top: 5px; /* Distanza dal bordo superiore */
+    right: 5px; /* Distanza dal bordo destro */
+    font-size: 0.9em; /* Leggermente più piccolo */
+    color: rgba(128, 128, 128, 0.7); /* Grigetto trasparente */
+    font-style: italic; /* (Opzionale) Per un effetto più elegante */
+}

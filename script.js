@@ -9,14 +9,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Autocomplete styling (add to your CSS)
     autocompleteList.style.position = "absolute";
-    autocompleteList.style.zIndex = "1000";
+    autocompleteList.style.zIndex = "5";
     autocompleteList.style.backgroundColor = "white";
     autocompleteList.style.width = `${searchInput.offsetWidth}px`;
     autocompleteList.style.border = "1px solid #ced4da";
     autocompleteList.style.borderRadius = "0.375rem";
     autocompleteList.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.15)";
     autocompleteList.style.display = "none";
-    autocompleteList.style.paddingLeft = "5px";
+    //autocompleteList.style.paddingLeft = "5px";
 
     let timeoutId;
     
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         const li = document.createElement("li");
                         li.textContent = suggestion;
                         li.style.padding = "8px";
-                        li.style.cursor = "none";
+                        //li.style.cursor = "none";
                         // Inside fetchAutocomplete()
                         li.addEventListener("click", () => {
                             searchInput.value = suggestion;
@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="col-md-4">
                     <div class="card mb-3 ${monsterClass}">
                         <div class="card-body">
+                            <p class="source-material">${monster.source || ""}</p>
                             <h5 class="card-title">${monster.name}</h5>
                             <p class="card-text creature-subtitle"><span class="text-highlight">Tipo</span> ${monster.type}</p>
                             <p class="card-text"><span class="text-highlight">GS</span> ${monster.challenge_rating}</p>
