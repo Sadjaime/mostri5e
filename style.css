@@ -141,7 +141,7 @@ li {
     padding-left: 2rem;
     pointer-events: auto;
 }
-li::hover{
+li:hover{
    background-color: rgba(128, 0, 128,.2); 
 }
 
