@@ -135,4 +135,11 @@ margin-bottom: 0;
 
 ul {
     list-style-type: none !important;
+    padding-left: 0px !important;
+}
+li {
+    padding-left: 2rem;
+}
+li::hover{
+   background-color: rgba(128, 0, 128,.2); 
 }
