@@ -27,6 +27,7 @@ font-size: 2em;
 margin-top: 0;
 margin-bottom: 0.2em;
 font-weight: bold; /* Potrebbe essere già bold di default, ma lo specifichiamo */
+color:#742
 }
 
 /* Sottotitolo creatura (Huge beast...) */
@@ -106,6 +107,7 @@ margin-bottom: 0.5em;
 font-weight: bold;
 border-bottom: 1px solid #742; /* Linea divisoria sotto i titoli di sezione */
 padding-bottom: 0.2em;
+color:#742;
 }
 
 /* Singolo Trait o Action */
