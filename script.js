@@ -8,15 +8,15 @@ document.addEventListener("DOMContentLoaded", function() {
     searchInput.parentNode.appendChild(autocompleteList);
 
     // Autocomplete styling (add to your CSS)
-    autocompleteList.style.position = "absolute";
+    /* autocompleteList.style.position = "absolute";
     autocompleteList.style.zIndex = "5";
     autocompleteList.style.backgroundColor = "white";
     autocompleteList.style.width = `${searchInput.offsetWidth}px`;
     autocompleteList.style.border = "1px solid #ced4da";
     autocompleteList.style.borderRadius = "0.375rem";
     autocompleteList.style.boxShadow = "0 0.5rem 1rem rgba(0, 0, 0, 0.15)";
-    autocompleteList.style.display = "none";
-    //autocompleteList.style.paddingLeft = "5px";
+    autocompleteList.style.display = "none";*/
+    //autocompleteList.style.paddingLeft = "5px"; 
 
     let timeoutId;
     
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Render monsters to the page
-    function renderMonsters(monsters) {
+    /* function renderMonsters(monsters) {
         monsterContainer.innerHTML = "";
         monsters.forEach(monster => {
             const monsterClass = monster.type && monster.type.toLowerCase().includes("beast") ? "beast" : "huge";
@@ -143,5 +143,82 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>`;
             monsterContainer.innerHTML += monsterCard;
         });
+    } */
+    function renderMonsters(monsters) {
+        monsterContainer.innerHTML = "";
+        monsters.forEach(monster => {
+            const monsterClass = monster.type && monster.type.toLowerCase().includes("beast") ? "beast" : "huge";
+            const monsterCard = `
+                <div class="col-md-6">
+                    <div class="card mb-3 ${monsterClass}">
+                        <div class="card-body">
+                            <h4 class="card-title">${monster.name}</h4>
+                            <p class="source-material"><strong>Fonte:</strong> ${monster.source || "?"}</p>
+                            <p><strong>Tipo:</strong> ${monster.type} (${monster.tags || ""})</p>
+                            <p><strong>Taglia:</strong> ${monster.size} | <strong>Allineamento:</strong> ${monster.alignment}</p>
+                            <p><strong>GS:</strong> ${monster.challenge_rating}</p>
+                            <hr>
+                            <h5>Statistiche Difensive</h5>
+                            <p><strong>CA:</strong> ${monster.armor_class} (${monster.armor_class_notes || ""})</p>
+                            <p><strong>PF:</strong> ${monster.hit_points} (${monster.hit_points_notes || ""})</p>
+                            <p><strong>Velocità:</strong> ${monster.speed}</p>
+    
+                            <hr>
+                            <h5>Abilità e Linguaggi</h5>
+                            <p><strong>Abilità:</strong> ${monster.abilities?.skills || ""}</p>
+                            <p><strong>Salvezze:</strong> ${monster.abilities?.saves || ""}</p>
+                            <p><strong>Percezione Passiva:</strong> ${monster.abilities?.passive_perception}</p>
+                            <p><strong>Linguaggi:</strong> ${monster.abilities?.languages || ""}</p>
+                            <p><strong>Sensi:</strong> ${monster.abilities?.senses || ""}</p>
+    
+                            <hr>
+                            <h5>Punteggi Caratteristica</h5>
+                            <div class="ability-scores">
+                                <div class="ability-header">
+                                    <span>FOR</span><span>DES</span><span>COS</span><span>INT</span><span>SAG</span><span>CAR</span>
+                                </div>
+                                <div class="ability-values">
+                                    <span>${monster.abilities?.strength}</span>
+                                    <span>${monster.abilities?.dexterity}</span>
+                                    <span>${monster.abilities?.constitution}</span>
+                                    <span>${monster.abilities?.intelligence}</span>
+                                    <span>${monster.abilities?.wisdom}</span>
+                                    <span>${monster.abilities?.charisma}</span>
+                                </div>
+                            </div>
+    
+                            <hr>
+                            <h5>Resistenze e Immunità</h5>
+                            <p><strong>Resistenze:</strong> ${monster.resistances?.resistances || ""} (${monster.resistances?.resistances_notes || ""})</p>
+                            <p><strong>Immunità:</strong> ${monster.resistances?.immunities || ""}</p>
+                            <p><strong>Immunità Condizione:</strong> ${monster.resistances?.condition_immunities || ""}</p>
+    
+                            <hr>
+                            <h5>Tratti</h5>
+                            <div>${monster.traits.map(t => `<p><strong>${t.name}</strong>: ${t.content}</p>`).join("")}</div>
+    
+                            <hr>
+                            <h5>Azioni</h5>
+                            <div>${monster.actions.map(a => `<p><strong>${a.name}</strong>: ${a.content}</p>`).join("")}</div>
+    
+                            <hr>
+                            <h5>Reazioni</h5>
+                            <div>${monster.reactions.map(r => `<p><strong>${r.name}</strong>: ${r.content}</p>`).join("")}</div>
+    
+                            <hr>
+                            <h5>Azioni Leggendarie</h5>
+                            <div>${monster.legendary_actions.map(l => `<p><strong>${l.name}</strong>: ${l.content}</p>`).join("")}</div>
+    
+                            <hr>
+                            <h5>Incantesimi</h5>
+                            <div>${monster.spellcasting.map(s => `<p><strong>${s.name}</strong>: ${s.content}</p>`).join("")}</div>
+                        </div>
+                    </div>
+                </div>`;
+            monsterContainer.innerHTML += monsterCard;
+        });
     }
-});
+        
+}
+
+);

@@ -156,3 +156,15 @@ li:hover{
     color: rgba(128, 128, 128, 0.7); /* Grigetto trasparente */
     font-style: italic; /* (Opzionale) Per un effetto più elegante */
 }
+
+/* CSS Autocomplete */
+#autocompleteList {
+    position : "absolute";
+    z-index : "5";
+    background-color : "white";
+    border: "1px solid #ced4da";
+    border-radius : "0.375rem";
+    box-shadow : "0 0.5rem 1rem rgba(0, 0, 0, 0.15)";
+    display : "none";
+    width : 100%;
+}
