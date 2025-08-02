@@ -1,4 +1,20 @@
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL } from '/static/config.js';
+function populateTypeFilter() {
+    fetch(`${API_BASE_URL}/types`)
+        .then(response => response.json())
+        .then(types => {
+            const typeFilter = document.getElementById("typeFilter");
+            typeFilter.innerHTML = '<option value="">Tutti</option>';
+            types.sort((a, b) => a.localeCompare(b, 'it', { sensitivity: 'base' })); // Sort alphabetically, Italian locale
+            types.forEach(type => {
+                const option = document.createElement("option");
+                option.value = type;
+                option.textContent = type;
+                typeFilter.appendChild(option);
+            });
+        });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const searchInput = document.getElementById("searchInput");
     const crFilter = document.getElementById("crFilter");
@@ -6,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const autocompleteList = document.createElement("ul");
     autocompleteList.id = "autocompleteList";
     searchInput.parentNode.appendChild(autocompleteList);
-
+    populateTypeFilter();
     // Autocomplete styling (add to your CSS)
     /* autocompleteList.style.position = "absolute";
     autocompleteList.style.zIndex = "5";
@@ -59,15 +75,12 @@ document.addEventListener("DOMContentLoaded", function() {
     function fetchMonsters() {
         const query = searchInput.value.trim();
         const selectedCR = crFilter.value; // Will be "" after autocomplete selection
-        
-        fetch(`${API_BASE_URL}/monsters?search=${encodeURIComponent(query)}`)
+        const selectedType = document.getElementById("typeFilter").value;
+        const url = `${API_BASE_URL}/monsters?search=${encodeURIComponent(query)}&gs=${encodeURIComponent(selectedCR)}&type=${encodeURIComponent(selectedType)}`;
+        fetch(url)
             .then(response => response.json())
             .then(data => {
-                // Filter monsters (now with reset GS)
-                const filteredMonsters = data.filter(monster => 
-                    selectedCR === "" || monster.challenge_rating == selectedCR
-                );
-                renderMonsters(filteredMonsters);
+                renderMonsters(data);
             });
     }
 
@@ -85,7 +98,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    crFilter.addEventListener("change", fetchMonsters);
+    //crFilter.addEventListener("change", fetchMonsters); no request sent when changin CR filter
+
+     // Add event listener for the search button
+    document.getElementById("searchButton").addEventListener("click", function() {
+        fetchMonsters();
+    });
 
     // Close autocomplete when clicking outside
     document.addEventListener("click", (e) => {
@@ -145,16 +163,20 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     } */
     function renderMonsters(monsters) {
+        //console.log("Rendering monsters:", monsters); log to check response
         monsterContainer.innerHTML = "";
+        monsters.sort((a, b) => a.name.localeCompare(b.name, 'it', { sensitivity: 'base' }));
         monsters.forEach(monster => {
             const monsterClass = monster.type && monster.type.toLowerCase().includes("beast") ? "beast" : "huge";
+            const resist = monster.resistances || {};
+            const abilities = monster.abilities || {};
             const monsterCard = `
                 <div class="col-md-6">
                     <div class="card mb-3 ${monsterClass}">
                         <div class="card-body">
                             <h4 class="card-title">${monster.name}</h4>
                             <p class="source-material"><strong>Fonte:</strong> ${monster.source || "?"}</p>
-                            <p><strong>Tipo:</strong> ${monster.type} (${monster.tags || ""})</p>
+                            <p><strong>Tipo:</strong> ${monster.type} ${monster.tags || ""}</p>
                             <p><strong>Taglia:</strong> ${monster.size} | <strong>Allineamento:</strong> ${monster.alignment}</p>
                             <p><strong>GS:</strong> ${monster.challenge_rating}</p>
                             <hr>
@@ -178,21 +200,21 @@ document.addEventListener("DOMContentLoaded", function() {
                                     <span>FOR</span><span>DES</span><span>COS</span><span>INT</span><span>SAG</span><span>CAR</span>
                                 </div>
                                 <div class="ability-values">
-                                    <span>${monster.abilities?.strength}</span>
-                                    <span>${monster.abilities?.dexterity}</span>
-                                    <span>${monster.abilities?.constitution}</span>
-                                    <span>${monster.abilities?.intelligence}</span>
-                                    <span>${monster.abilities?.wisdom}</span>
-                                    <span>${monster.abilities?.charisma}</span>
+                                    <span>${abilities?.strength}</span>
+                                    <span>${abilities?.dexterity}</span>
+                                    <span>${abilities?.constitution}</span>
+                                    <span>${abilities?.intelligence}</span>
+                                    <span>${abilities?.wisdom}</span>
+                                    <span>${abilities?.charisma}</span>
                                 </div>
                             </div>
     
                             <hr>
                             <h5>Resistenze e Immunità</h5>
-                            <p><strong>Resistenze:</strong> ${monster.resistances?.resistances || ""} (${monster.resistances?.resistances_notes || ""})</p>
-                            <p><strong>Immunità:</strong> ${monster.resistances?.immunities || ""}</p>
-                            <p><strong>Immunità Condizione:</strong> ${monster.resistances?.condition_immunities || ""}</p>
-    
+                            <p><strong>Resistenze:</strong> ${resist?.resistances || ""} (${resist?.resistances_notes || ""})</p>
+                            <p><strong>Immunità:</strong> ${resist?.immunities || ""}</p>
+                            <p><strong>Immunità Condizione:</strong> ${resist?.condition_immunities || ""}</p>
+
                             <hr>
                             <h5>Tratti</h5>
                             <div>${monster.traits.map(t => `<p><strong>${t.name}</strong>: ${t.content}</p>`).join("")}</div>

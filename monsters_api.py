@@ -188,12 +188,41 @@ def fetch_monster_data_from_db():
 @app.route('/api/monsters', methods=['GET'])
 def get_monsters():
     search_query = request.args.get('search', '').lower()
+    gs_query = request.args.get('gs', '').strip()
+    type_query = request.args.get('type', '').strip().lower()
     all_monsters = fetch_monster_data_from_db()
     filtered_monsters = [
         monster for monster in all_monsters
         if search_query in monster["name"].lower()
+        and (gs_query == "" or str(monster["challenge_rating"]) == gs_query)
+        and (type_query == "" or monster["type"].lower() == type_query)
     ]
     return jsonify(filtered_monsters)
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/api/autocomplete')
+def autocomplete():
+    query = request.args.get('query', '').lower()
+    all_monsters = fetch_monster_data_from_db()
+    # Return names that match the query (case-insensitive, startswith or contains)
+    suggestions = [
+        monster["name"] for monster in all_monsters
+        if query in monster["name"].lower()
+    ][:10]  # Limit to 10 suggestions
+    return jsonify(suggestions)
+
+@app.route('/api/types', methods=['GET'])
+def get_types():
+    conn = sqlite3.connect('./database/monsters.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT type FROM monsters ORDER BY type ASC")
+    types = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(types)
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)
+
