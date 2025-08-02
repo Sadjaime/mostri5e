@@ -72,7 +72,15 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
+    function showLoader() {
+    document.getElementById("loader").style.display = "block";
+    }
+    function hideLoader() {
+        document.getElementById("loader").style.display = "none";
+    }
+    // Fetch monsters based on search input and filters
     function fetchMonsters() {
+        showLoader();
         const query = searchInput.value.trim();
         const selectedCR = crFilter.value; // Will be "" after autocomplete selection
         const selectedType = document.getElementById("typeFilter").value;
@@ -81,7 +89,10 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 renderMonsters(data);
-            });
+            })
+        .finally(() => {
+            hideLoader();
+        });
     }
 
     // Event Listeners
