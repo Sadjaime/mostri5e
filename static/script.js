@@ -36,7 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let timeoutId;
     
-    function fetchAutocomplete(query) {
+    // Old Fetch autocomplete 
+    /* function fetchAutocomplete(query) {
         if (!query) {
             autocompleteList.style.display = "none";
             return;
@@ -70,7 +71,42 @@ document.addEventListener("DOMContentLoaded", function() {
                     autocompleteList.style.display = "none";
                 }
             });
-    }
+    } */
+
+
+    // New Fetch autocomplete
+    function fetchAutocomplete(query) {
+        if (!query) {
+            autocompleteList.style.display = "none";
+            return;
+        }
+        fetch(`${API_BASE_URL}/monster_names`)
+            .then(response => response.json())
+            .then(monsters => {
+                // Filter client-side for matching names
+                const suggestions = monsters.filter(m =>
+                    m.name.toLowerCase().includes(query.toLowerCase())
+                ).slice(0, 10); // Limit to 10
+                autocompleteList.innerHTML = "";
+                if (suggestions.length > 0) {
+                    autocompleteList.style.display = "block";
+                    suggestions.forEach((suggestion) => {
+                        const li = document.createElement("li");
+                        li.textContent = suggestion.name;
+                        li.style.padding = "8px";
+                        li.addEventListener("click", () => {
+                            searchInput.value = suggestion.name;
+                            autocompleteList.style.display = "none";
+                            // Fetch monster by ID for details
+                            fetchMonsterById(suggestion.id);
+                        });
+                        autocompleteList.appendChild(li);
+                    });
+                } else {
+                    autocompleteList.style.display = "none";
+                }
+            });
+        }       
 
     function showLoader() {
     document.getElementById("loader").style.display = "block";
@@ -250,6 +286,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>`;
             monsterContainer.innerHTML += monsterCard;
         });
+    }
+
+        function fetchMonsterById(id) {
+        showLoader();
+        fetch(`${API_BASE_URL}/monster/${id}`)
+            .then(response => response.json())
+            .then(monster => {
+                renderMonsters([monster]);
+            })
+            .finally(() => {
+                hideLoader();
+            });
     }
         
 }

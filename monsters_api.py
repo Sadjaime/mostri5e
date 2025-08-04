@@ -185,7 +185,8 @@ def fetch_monster_data_from_db():
     conn.close()
     return all_monsters_data
 
-@app.route('/api/monsters', methods=['GET'])
+# Optimized to retrieve filtered data only
+""" @app.route('/api/monsters', methods=['GET'])
 def get_monsters():
     search_query = request.args.get('search', '').lower()
     gs_query = request.args.get('gs', '').strip()
@@ -197,12 +198,137 @@ def get_monsters():
         and (gs_query == "" or str(monster["challenge_rating"]) == gs_query)
         and (type_query == "" or monster["type"].lower() == type_query)
     ]
-    return jsonify(filtered_monsters)
+    return jsonify(filtered_monsters) """
+##
+
+@app.route('/api/monsters', methods=['GET'])
+def get_monsters():
+    search_query = request.args.get('search', '').strip().lower()
+    gs_query = request.args.get('gs', '').strip()
+    type_query = request.args.get('type', '').strip().lower()
+
+    conn = sqlite3.connect('./database/monsters.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    sql = "SELECT id FROM monsters WHERE 1=1"
+    params = []
+
+    if search_query:
+        sql += " AND LOWER(name) LIKE ?"
+        params.append(f"%{search_query}%")
+    if gs_query:
+        sql += " AND challenge_rating = ?"
+        params.append(gs_query)
+    if type_query:
+        sql += " AND LOWER(type) = ?"
+        params.append(type_query)
+
+    cursor.execute(sql, params)
+    monster_ids = [row["id"] for row in cursor.fetchall()]
+    conn.close()
+
+    # Now fetch full details for only these monsters
+    detailed_monsters = []
+    for monster_id in monster_ids:
+        detailed_monsters.append(get_monster_details(monster_id))
+    return jsonify(detailed_monsters)
+
+def get_monster_details(monster_id):
+    conn = sqlite3.connect('./database/monsters.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    # Dati base del mostro
+    cursor.execute("""
+        SELECT id, name, type, tags, size, alignment, challenge_rating,
+               armor_class, armor_class_notes, hit_points, hit_points_notes,
+               speed, legendary_actions, source
+        FROM monsters WHERE id = ?
+    """, (monster_id,))
+    monster = cursor.fetchone()
+    if not monster:
+        conn.close()
+        return {}
+
+    monster = dict(monster)
+
+    # Traits
+    cursor.execute("SELECT name, content FROM traits WHERE monster_id = ?", (monster_id,))
+    traits_data = [dict(row) for row in cursor.fetchall()]
+
+    # Actions
+    cursor.execute("SELECT name, content FROM actions WHERE monster_id = ?", (monster_id,))
+    actions_data = [dict(row) for row in cursor.fetchall()]
+
+    # Abilities
+    cursor.execute("""
+        SELECT strength, dexterity, constitution, intelligence, wisdom, charisma,
+               skills, passive_perception, saves, languages, senses
+        FROM abilities WHERE monster_id = ?
+    """, (monster_id,))
+    abilities_row = cursor.fetchone()
+    abilities_data = {}
+    if abilities_row:
+        abilities_data = {
+            "strength": abilities_row["strength"],
+            "dexterity": abilities_row["dexterity"],
+            "constitution": abilities_row["constitution"],
+            "intelligence": abilities_row["intelligence"],
+            "wisdom": abilities_row["wisdom"],
+            "charisma": abilities_row["charisma"],
+            "skills": abilities_row["skills"],
+            "passive_perception": abilities_row["passive_perception"],
+            "saves": abilities_row["saves"],
+            "languages": abilities_row["languages"],
+            "senses": abilities_row["senses"]
+        }
+
+    # Legendary Actions
+    cursor.execute("SELECT name, content FROM legendary_actions WHERE monster_id = ?", (monster_id,))
+    legendary_actions_data = [dict(row) for row in cursor.fetchall()]
+
+    # Reactions
+    cursor.execute("SELECT name, content FROM reactions WHERE monster_id = ?", (monster_id,))
+    reactions_data = [dict(row) for row in cursor.fetchall()]
+
+    # Resistances
+    cursor.execute("""
+        SELECT resistances, resistances_notes, immunities, condition_immunities
+        FROM resistances WHERE monster_id = ?
+    """, (monster_id,))
+    resistances_row = cursor.fetchone()
+    resistances_data = {}
+    if resistances_row:
+        resistances_data = {
+            "resistances": resistances_row["resistances"],
+            "resistances_notes": resistances_row["resistances_notes"],
+            "immunities": resistances_row["immunities"],
+            "condition_immunities": resistances_row["condition_immunities"]
+        }
+
+    # Spellcasting
+    cursor.execute("SELECT name, content FROM spellcasting WHERE monster_id = ?", (monster_id,))
+    spellcasting_data = [dict(row) for row in cursor.fetchall()]
+
+    # Compose final monster data
+    full_monster_data = monster.copy()
+    full_monster_data["traits"] = traits_data
+    full_monster_data["actions"] = actions_data
+    full_monster_data["abilities"] = abilities_data
+    full_monster_data["legendary_actions"] = legendary_actions_data
+    full_monster_data["reactions"] = reactions_data
+    full_monster_data["resistances"] = resistances_data
+    full_monster_data["spellcasting"] = spellcasting_data
+
+    conn.close()
+    return full_monster_data
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Replaces by monster_names
 @app.route('/api/autocomplete')
 def autocomplete():
     query = request.args.get('query', '').lower()
@@ -213,6 +339,7 @@ def autocomplete():
         if query in monster["name"].lower()
     ][:10]  # Limit to 10 suggestions
     return jsonify(suggestions)
+##
 
 @app.route('/api/types', methods=['GET'])
 def get_types():
@@ -222,6 +349,23 @@ def get_types():
     types = [row[0] for row in cursor.fetchall()]
     conn.close()
     return jsonify(types)
+
+@app.route('/api/monster_names', methods=['GET'])
+def get_monster_names():
+    conn = sqlite3.connect('./database/monsters.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name FROM monsters ORDER BY name ASC")
+    names = [{"id": row[0], "name": row[1]} for row in cursor.fetchall()]
+    conn.close()
+    return jsonify(names)
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5000)
